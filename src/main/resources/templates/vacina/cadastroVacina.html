@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Vacina</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
 </head>
-<body>
-$END$
+<body class="p-3">
+<!-- Barra de Navegação -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="/">🐑 Rancho KZD</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/ovinos">Ovinos</a>
+            <a class="nav-link active" href="/vacinas">Vacinas</a>
+            <a class="nav-link" href="/funcionarios">Funcionários</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+<h2 th:text="${#strings.isEmpty(vacina.idvacina) ? 'Nova Vacina' : 'Editar Vacina'}"></h2>
+
+<form th:action="@{/vacinas/salvar}" th:object="${vacina}" method="post">
+  <input type="hidden" th:field="*{idvacina}"/>
+
+  <div class="mb-3">
+    <label>Nome da Vacina</label>
+    <input class="form-control" th:field="*{nome_vacina}" required/>
+  </div>
+  <div class="mb-3">
+    <label>Lote</label>
+    <input class="form-control" th:field="*{lote_vacina}" required/>
+  </div>
+
+  <button class="btn btn-success">Salvar</button>
+  <a href="/vacinas" class="btn btn-secondary">Cancelar</a>
+</form>
+</div>
 </body>
 </html>
