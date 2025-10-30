@@ -40,11 +40,11 @@ public class OvinoController {
         List<Ovino> ovinos = oRep.findAll();
         model.addAttribute("ovinos", ovinos);
 
-//        Map<Long, String> ganhoPesoPorOvino = new HashMap<>();
-//        for (Ovino ovino : ovinos) {
-//            ganhoPesoPorOvino.put(ovino.getId_ovino(), calcularGanhoDePeso(ovino));
-//        }
-//        model.addAttribute("ganhoPeso", ganhoPesoPorOvino);
+        Map<Long, String> ganhoPesoPorOvino = new HashMap<>();
+        for (Ovino ovino : ovinos) {
+            ganhoPesoPorOvino.put(ovino.getId_ovino(), calcularGanhoDePeso(ovino));
+        }
+        model.addAttribute("ganhoPeso", ganhoPesoPorOvino);
         return "ovinos/listaOvinos";
     }
 
@@ -86,7 +86,31 @@ public class OvinoController {
         return "ovinos/view";
     }
 
+    private String calcularGanhoDePeso(Ovino ovino) {
+        if (ovino == null) return "-";
 
+        Double pesoNascimento = ovino.getPeso_nascimento();
+        Double pesoMaisRecente = primeiroNaoNulo(
+                ovino.getPeso_45d(),
+                ovino.getPeso_30d(),
+                ovino.getPeso_15d(),
+                ovino.getPeso_nascimento()
+        );
 
+        if (pesoNascimento == null || pesoMaisRecente == null) return "-";
+
+        double ganho = pesoMaisRecente - pesoNascimento;
+
+        LocalDate inicio = ovino.getData_nascimento();
+        LocalDate fim = LocalDate.now();
+        if (inicio == null) return String.format("%.2f kg", ganho);
+        long dias = ChronoUnit.DAYS.between(inicio, fim);
+        return String.format("%.2f kg em %d dias", ganho, dias);
+    }
+
+    private Double primeiroNaoNulo(Double... valores) {
+        for (Double v : valores) if (v != null) return v;
+        return null;
+    }
 }
 

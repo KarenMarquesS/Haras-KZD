@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Ovino</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+</head>
+<body class="p-3">
+<!-- Barra de Navegação -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="/">🐑 Rancho KZD</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link active" href="/ovinos">Ovinos</a>
+            <a class="nav-link" href="/vacinas">Vacinas</a>
+            <a class="nav-link" href="/funcionarios">Funcionários</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+<h2>Detalhes do Ovino #<span th:text="${ovino.numero_brinco}"></span></h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Informações do Ovino</h5>
+        <table class="table table-bordered">
+            <tr>
+                <th>ID</th>
+                <td th:text="${ovino.id_ovino}"></td>
+            </tr>
+            <tr>
+                <th>Número do Brinco</th>
+                <td th:text="${ovino.numero_brinco}"></td>
+            </tr>
+            <tr>
+                <th>Data de Nascimento</th>
+                <td th:text="${ovino.data_nascimento}"></td>
+            </tr>
+            <tr>
+                <th>Peso ao Nascer</th>
+                <td th:text="${ovino.peso_nascimento != null ? ovino.peso_nascimento + ' kg' : 'N/A'}"></td>
+            </tr>
+            <tr>
+                <th>Peso aos 15 dias</th>
+                <td th:text="${ovino.peso_15d != null ? ovino.peso_15d + ' kg' : 'N/A'}"></td>
+            </tr>
+            <tr>
+                <th>Peso aos 30 dias</th>
+                <td th:text="${ovino.peso_30d != null ? ovino.peso_30d + ' kg' : 'N/A'}"></td>
+            </tr>
+            <tr>
+                <th>Peso aos 45 dias</th>
+                <td th:text="${ovino.peso_45d != null ? ovino.peso_45d + ' kg' : 'N/A'}"></td>
+            </tr>
+            <tr>
+                <th>Data da Última Vacina</th>
+                <td th:text="${ovino.data_vacina != null ? ovino.data_vacina : 'N/A'}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Histórico</h5>
+        <div th:if="${ovino.historico != null and !ovino.historico.isEmpty()}">
+            <p class="text-muted">Nenhum histórico registrado ainda.</p>
+        </div>
+        <div th:if="${ovino.historico != null and !ovino.historico.isEmpty()}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Ação</th>
+                        <th>Peso</th>
+                        <th>Vacina</th>
+                        <th>Funcionário</th>
+                        <th>Observação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="h : ${ovino.historico}">
+                        <td th:text="${h.dataHora}"></td>
+                        <td th:text="${h.acao}"></td>
+                        <td th:text="${h.pesoRegistrado != null ? h.pesoRegistrado + ' kg' : 'N/A'}"></td>
+                        <td th:text="${h.vacina != null ? h.vacina.nome_vacina : 'N/A'}"></td>
+                        <td th:text="${h.funcionario != null ? h.funcionario.nome : 'N/A'}"></td>
+                        <td th:text="${h.observacao != null ? h.observacao : 'N/A'}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a th:href="@{'/ovinos/editar/' + ${ovino.id_ovino}}" class="btn btn-warning">Editar</a>
+    <a href="/ovinos" class="btn btn-secondary">Voltar</a>
+</div>
+</div>
+</body>
+</html>
+
